@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Home</title>
+        <style>
+            body {
+                display: flex;
+                justify-content: center;
+                flex-direction: column;
+                width: 100vw;
+                height: 100vh;
+                align-items: center;
+            }
+
+        </style>
+
+
+    </head>
+    <body>
+        <h1>Image Tester</h1>
+        
+        <div>
+            <input type="text" id="searchInput" placeholder="search for a person!">
+            <button id="searchBtn">Search</button>
+        </div>
+        <h3 id="name"></h3>
+
+        <h4>Upload a image</h4>
+        <input type="file" id="fileInput">
+        <input type="text" id="nameInput" placeholder="Enter a name">
+        <button id="submitBtn">Submit</button>
+        <br>
+        <img id="preview">
+
+
+
+    </body>
+    
+    <!-- imports -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"></script>
+
+    <script>
+        console.log("this is working")
+
+        const searchInput = document.getElementById("searchInput");
+        const fileInput = document.getElementById("fileInput");
+        const nameInput = document.getElementById("nameInput");
+        const preview = document.getElementById("preview");
+
+        fileInput.addEventListener("change", () => {
+            console.log("File Change event occured!");
+            console.log(fileInput.files.item(0).name)
+            console.log(fileInput.files.item(0).size)
+            console.log(fileInput.files.item(0).type)
+
+            const reader = new FileReader();
+            reader.onload = function () {
+                console.log(reader.result)
+                preview.src = reader.result; // Save this string as a bytea in postgres or blog in mysql
+                axios.post("http://localhost:5000/image", {imgData: reader.result, imgName: nameInput.value})
+                    .then((res) => console.log(res))
+                    .catch((err) => console.log(err));
+            }
+            reader.readAsDataURL(fileInput.files[0]);
+        }, false);
+
+    </script>
+
+</html>
